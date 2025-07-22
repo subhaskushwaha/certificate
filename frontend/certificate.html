@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Verified Certificate</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Georgia', serif;
+      background: #f8f8f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .certificate {
+      background: #fff;
+      padding: 50px 40px;
+      border: 10px solid #2c3e50;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 800px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .certificate h1 {
+      font-size: 36px;
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+
+    .certificate h3 {
+      margin-top: 10px;
+      font-weight: normal;
+      color: #555;
+    }
+
+    .certificate .line {
+      margin: 25px 0;
+      border-top: 1px solid #ccc;
+    }
+
+    .certificate p {
+      font-size: 18px;
+      margin: 10px 0;
+      color: #333;
+    }
+
+    .certificate .name {
+      font-size: 28px;
+      font-weight: bold;
+      margin: 20px 0 10px;
+      color: #1a237e;
+    }
+
+    .certificate .footer {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #777;
+    }
+
+    .error {
+      color: red;
+      font-size: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="certificate" id="certContent">
+    <h3>Loading your certificate...</h3>
+  </div>
+
+  <script>
+    async function loadCertificate() {
+      const params = new URLSearchParams(window.location.search);
+      const name = params.get("name");
+
+      const content = document.getElementById("certContent");
+
+      if (!name) {
+        content.innerHTML = "<p class='error'>❌ Name not provided in URL.</p>";
+        return;
+      }
+
+      try {
+        const res = await fetch("http://localhost:3000/verify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name }),
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          const cert = data.data;
+          content.innerHTML = `
+            <h1>Certificate of Completion</h1>
+            <div class="line"></div>
+            <p>This is to certify that</p>
+            <p class="name">${cert.name}</p>
+            <p>has successfully completed the</p>
+            <p><strong>${cert.course}</strong></p>
+            <p>course on</p>
+            <p><strong>${new Date(cert.issuedDate).toDateString()}</strong></p>
+            <div class="line"></div>
+            <p><strong>Certificate ID:</strong> ${cert.certificateId}</p>
+            <div class="footer">This certificate is digitally generated and verified by our system.</div>
+          `;
+        } else {
+          content.innerHTML = `<p class="error">❌ ${data.message}</p>`;
+        }
+      } catch (err) {
+        content.innerHTML = `<p class="error">⚠️ Server error: ${err.message}</p>`;
+      }
+    }
+
+    loadCertificate();
+  </script>
+</body>
+</html>

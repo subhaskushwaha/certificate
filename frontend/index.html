@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Certificate Verifier</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #e0eafc, #cfdef3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 450px;
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    input {
+      padding: 12px;
+      width: 80%;
+      margin-bottom: 20px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+      transition: 0.3s ease;
+    }
+
+    input:focus {
+      border-color: #0077ff;
+      box-shadow: 0 0 5px #0077ff55;
+    }
+
+    button {
+      padding: 12px 25px;
+      background-color: #0077ff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #005fd0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Verify Your Certificate</h2>
+    <input type="text" id="nameInput" placeholder="Enter your name" />
+    <br />
+    <button onclick="redirectToCertificate()">Verify</button>
+  </div>
+
+  <script>
+    function redirectToCertificate() {
+      const name = document.getElementById("nameInput").value.trim();
+      if (!name) {
+        alert("Please enter a name");
+        return;
+      }
+      window.location.href = `certificate.html?name=${encodeURIComponent(name)}`;
+    }
+  </script>
+</body>
+</html>
